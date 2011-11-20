@@ -1,7 +1,12 @@
 h2= title
 label Nick: 
-  input#my_nick
-  small (careful, you can only set it once!)
+  input#my_nick(size=64)
 div#chat_in
+  | Once the connection is established, you will have an auto-generated ID.
+  | If you use an email address for the nick above,
+  | it will do a gravatar lookup for your avatar, but only display
+  | the username portion of your address as your handle
+  p Careful, you can only set it once per page load! (enforced, not a technical limit)
+  p Connecting...
 label Message: 
   input#chat_out(size=64)
