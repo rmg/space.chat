@@ -5,7 +5,8 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , util = require('util');
+  , util = require('util')
+  , markdown = require('robotskirt');
 
 var app = module.exports = express.createServer()
   , io = require('socket.io').listen(app);
@@ -64,7 +65,10 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('msg', function (message) {
     message.from = socket.nickname;
-    socket.broadcast.emit('msg', message);
+    if (message.message) {
+      message.message = markdown.toHtmlSync(message.message).toString();
+    }
+    announce(message);
   });
 
 });
