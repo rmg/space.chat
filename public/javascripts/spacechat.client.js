@@ -1,6 +1,6 @@
 // vim: ts=2 sw=2 expandtab
 (function () {
-  window['spacechat'] = window['sapcechat'] || io.connect('http://localhost');
+  window['spacechat'] = window['sapcechat'] || io.connect();
   var socket = window.spacechat;
   var $out = $("#chat_out"), $in = $("#chat_in"), $me = $("#my_nick");
   var emote_re = /^\/me /;

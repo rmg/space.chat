@@ -5,8 +5,10 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , util = require('util')
-  , markdown = require('robotskirt');
+  , util = require('util');
+//  , markdown = require('robotskirt');
+
+var markdown = { toHtmlSync: function (str) { return str; } };
 
 var app = module.exports = express.createServer()
   , io = require('socket.io').listen(app);
@@ -73,5 +75,6 @@ io.sockets.on('connection', function (socket) {
 
 });
 
-app.listen(3000);
+var port = process.env.PORT || 3000;
+app.listen(port);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
