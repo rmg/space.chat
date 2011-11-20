@@ -40,7 +40,12 @@ app.get('/', routes.index);
 
 var users = {};
 
+// TODO: refactor this all into a CommonJS module and just
+//       instantiate it on each new connection or something
 io.sockets.on('connection', function (socket) {
+  function sys_announce(msg) {
+    announce({ from: 'SYS', message: msg});
+  }
   function announce(announcement) {
     socket.emit('msg', announcement).broadcast.emit('msg', announcement);
   }
@@ -50,7 +55,10 @@ io.sockets.on('connection', function (socket) {
   console.info("  INFO  new client: " + socket.nickname);
 
   socket.emit('msg', {from: 'SYS', message: "Welcome to spacechat, " + socket.nickname});
-  announce({from: 'SYS', message: socket.nickname + " has joined the chat "});
+  sys_announce(
+    socket.nickname + " has joined the chat. " +
+      "Current users are: " + Object.keys(users).join(', ')
+  );
 
   socket.on('disconnect', function () {
     socket.broadcast.emit('msg', {from: 'SYS', message: socket.nickname + ' has left.'});
@@ -66,7 +74,7 @@ io.sockets.on('connection', function (socket) {
       delete users[old];
       users[nick] = socket;
       fn(true);
-      announce({from: 'SYS', message: old + " is now known as " + nick});
+      sys_announce(old + " is now known as " + nick);
     }
   });
   socket.on('msg', function (message) {
