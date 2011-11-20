@@ -18,6 +18,13 @@ chat that uses little ships floating around space.
  * explosion on exit
  * ???
 
+Demo
+----
+
+I was surprised at how easy it is to deploy to Heroku. Those guys really know what they're doing!
+
+http://space-chat.herokuapp.com/
+
 License
 -------
 MIT Liceced, &copy; Ryan Graham
