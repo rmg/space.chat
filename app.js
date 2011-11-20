@@ -49,6 +49,13 @@ io.sockets.on('connection', function (socket) {
   function announce(announcement) {
     socket.emit('msg', announcement).broadcast.emit('msg', announcement);
   }
+  function handle_command (cmd, args) {
+    if (cmd == '/list') {
+      socket.emit('msg', {from: 'SYS', message: "Current users: " + Object.keys(users).join(', ')});
+    } else {
+      socket.emit('msg', {from: 'SYS', message: "Unknown command: " + cmd})
+    }
+  }
   socket.nickname = socket.id.toString();
   users[socket.nickname] = socket;
 
@@ -82,7 +89,11 @@ io.sockets.on('connection', function (socket) {
     if (message.message) {
       message.message = markdown.toHtmlSync(message.message).toString();
     }
-    announce(message);
+    if (message.cmd) {
+      handle_command(message.cmd, message.args);
+    } else if (message.message || message.emote) {
+      announce(message);
+    }
   });
 
 });

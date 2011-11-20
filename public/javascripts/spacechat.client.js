@@ -4,6 +4,7 @@
   var socket = window.spacechat;
   var $out = $("#chat_out"), $in = $("#chat_in"), $me = $("#my_nick");
   var emote_re = /^\/me /;
+  var list_re = /^\/list$/;
   function show_message(data) {
     var avatar = "<img class='avatar' src='http://gravatar.com/avatar/" + md5(data.from) + "?s=16&d=retro' />";
     var who = data.from.split('@')[0];
@@ -30,6 +31,8 @@
     var input = $(this).val(), msg = {};
     if (emote_re.test(input)) {
       msg.emote = input.replace(emote_re, '');
+    } else if (list_re.test(input)) {
+      msg.cmd = '/list';
     } else {
       msg.message = input;
     }
