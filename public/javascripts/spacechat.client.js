@@ -3,10 +3,14 @@
   window['spacechat'] = window['sapcechat'] || io.connect('http://localhost');
   var socket = window.spacechat;
   var $out = $("#chat_out"), $in = $("#chat_in"), $me = $("#my_nick");
+  var emote_re = /^\/me /;
   function show_message(data) {
-    $in.append($("<pre>", {
-      text: data.from + ": " + data.message
-    }));
+    var avatar = "<img class='avatar' src='http://gravatar.com/avatar/" + md5(data.from) + "?s=16&d=retro' />";
+    var who = data.from.split('@')[0];
+    var message = ( data.emote ?
+      "<span class='emote'>" + who + " " + data.emote + "</span>" :
+      "<span class='nick'>" + who + ":</span>" + "<span class='message'>" + data.message + "</span>");
+    $in.append("<div class='line'>" + avatar + message + "</div>");
   }
   socket.on('connect', function () {
     $me.val(this.socket.sessionid);
@@ -22,9 +26,13 @@
     }
   });
   $out.on('return_pressed', function () {
-    var msg = { from: "me", message: $(this).val() };
+    var input = $(this).val(), msg = {};
+    if (emote_re.test(input)) {
+      msg.emote = input.replace(emote_re, '');
+    } else {
+      msg.message = input;
+    }
     socket.emit("msg", msg);
-    show_message(msg);
     $(this).val('');
   });
   $me.on('return_pressed', function () {
