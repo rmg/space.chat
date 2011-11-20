@@ -5,10 +5,8 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , util = require('util');
-//  , markdown = require('robotskirt');
-
-var markdown = { toHtmlSync: function (str) { return str; } };
+  , util = require('util')
+  , markdown = require('markdown').markdown.toHTML;
 
 var app = module.exports = express.createServer()
   , io = require('socket.io').listen(app);
@@ -56,7 +54,7 @@ io.sockets.on('connection', function (socket) {
       socket.emit('msg', {from: 'SYS', message: "Unknown command: " + cmd})
     }
   }
-  socket.nickname = socket.id.toString();
+  socket.nickname = socket.id;
   users[socket.nickname] = socket;
 
   console.info("  INFO  new client: " + socket.nickname);
@@ -87,7 +85,7 @@ io.sockets.on('connection', function (socket) {
   socket.on('msg', function (message) {
     message.from = socket.nickname;
     if (message.message) {
-      message.message = markdown.toHtmlSync(message.message).toString();
+      message.message = markdown(message.message);
     }
     if (message.cmd) {
       handle_command(message.cmd, message.args);
