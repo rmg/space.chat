@@ -6,7 +6,7 @@
   var emote_re = /^\/me /;
   var list_re = /^\/list$/;
   function show_message(data) {
-    var avatar = "<img class='avatar' src='http://gravatar.com/avatar/" + md5(data.from) + "?s=16&d=retro' />";
+    var avatar = "<img class='avatar' src='http://gravatar.com/avatar/" + Crypto.MD5(data.from) + "?s=16&d=retro' />";
     var who = data.from.split('@')[0];
     var message = ( data.emote ?
       "<span class='emote'>" + who + " " + data.emote + "</span>" :
