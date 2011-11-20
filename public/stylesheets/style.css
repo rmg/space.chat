@@ -10,4 +10,33 @@ a {
 #chat_in {
   border: 1px solid black;
   width: 500px;
+  height: 300px;
+  overflow-y: scroll;
+  clear: both;
+}
+
+.avatar {
+    float: left;
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
+
+.line {
+    clear: both;
+    font-size: 0.8em;
+    margin: 5px 5px 7px 3px;
+}
+
+.line p {
+    margin: 0;
+    display: inline-block;
+}
+
+.nick {
+    font-weight: bold;
+    padding-right: 3px;
+}
+
+.emote {
+    font-style: italic;
 }
