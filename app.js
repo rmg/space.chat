@@ -46,6 +46,8 @@ io.sockets.on('connection', function (socket) {
   socket.nickname = socket.id.toString();
   users[socket.nickname] = socket;
 
+  console.info("  INFO  new client: " + socket.nickname);
+
   socket.emit('msg', {from: 'SYS', message: "Welcome to spacechat, " + socket.nickname});
   announce({from: 'SYS', message: socket.nickname + " has joined the chat "});
 
@@ -54,12 +56,12 @@ io.sockets.on('connection', function (socket) {
     delete users[socket.nickname];
   });
   socket.on('nick', function (nick, fn) {
-    console.log("Attempting to change nick from " + socket.nickname + " to " + nick);
     if (users.hasOwnProperty(nick)) {
       fn(false);
     } else {
       old = socket.nickname;
       socket.nickname = nick;
+      console.info("  INFO  client name change " + old + " -> " + nick);
       delete users[old];
       users[nick] = socket;
       fn(true);
