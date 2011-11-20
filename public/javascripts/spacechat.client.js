@@ -36,9 +36,10 @@
     $(this).val('');
   });
   $me.on('return_pressed', function () {
-    var nick = $(this).val();
+    var nick = $(this).val().replace(/^\s+/, '').replace(/\s+$/, '');
     socket.emit("nick", nick, function (success) {
       if (success) {
+        $me.val(nick);
         $me.prop('disabled', true);
       } else {
         $me.val("sorry, taken, try again");
