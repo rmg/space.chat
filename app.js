@@ -30,6 +30,7 @@ app.configure('development', function(){
 
 app.configure('production', function(){
   app.use(express.errorHandler()); 
+  io.set("log level", 1);
 });
 
 // Routes
