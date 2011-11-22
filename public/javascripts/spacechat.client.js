@@ -12,7 +12,7 @@
       "<span class='emote'>" + who + " " + data.emote + "</span>" :
       "<span class='nick'>" + who + ":</span>" + "<span class='message'>" + data.message + "</span>");
     $in.append("<div class='line'>" + avatar + message + "</div>");
-    $in.scrollTop($in.height());
+    $in.scrollTop($in.prop('scrollHeight'));
   }
   socket.on('connect', function () {
     $me.val(this.socket.sessionid);
