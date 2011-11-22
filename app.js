@@ -90,7 +90,7 @@ io.sockets.on('connection', function (socket) {
         who.push(user);
       }
     }
-    socket.emit('typing', who);
+    socket.emit('typing', who).broadcast.emit('typing', who);
   });
   socket.on('msg', function (message) {
     message.from = socket.nickname;

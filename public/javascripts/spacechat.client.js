@@ -11,21 +11,17 @@
     if (isTyping === true) {
       if (now - last_type > 5000) {
         socket.emit('typing', true);
-        console.log('typing...');
         last_type = now;
         setTimeout(typingCheck, 3500);
       }
     } else if (isTyping === false) {
         socket.emit('typing', false);
-        console.log('stopped typing.');
-        last_type = now - 3000;
+        last_type = 0;
     } else {
       if (now - last_type > 7000) {
         socket.emit('typing', false);
-        console.log('stopped typing.');
       } else {
         setTimeout(typingCheck, 3500);
-        console.log('nothing', now, last_type, isTyping);
       }
     }
   }
@@ -46,7 +42,14 @@
     socket.emit('my other event', { my: 'data' });
   });
   socket.on('msg', show_message);
-  socket.on('typing', function(who) { $typing.html(who.join[', '] + ' it typing...'); } );
+  socket.on('typing', function (who) {
+    if (who.length) {
+      $typing.html(who.join(', ') + ' ' + (who.length > 1 ? 'are' : 'is') + ' typing...');
+      $in.scrollTop($in.prop('scrollHeight'));
+    } else {
+      $typing.html(' &nbsp; ');
+    }
+  });
   $("input").on('keypress', function (e) {
     typingCheck(true);
     if (e.keyCode == 13) {
