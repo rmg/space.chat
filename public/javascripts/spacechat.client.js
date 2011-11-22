@@ -1,10 +1,12 @@
 // vim: ts=2 sw=2 expandtab
 (function () {
+  var console = window.console || { log : function () {} };
   window['spacechat'] = window['sapcechat'] || io.connect();
   var socket = window.spacechat;
-  var $out = $("#chat_out"), $in = $("#chat_in"), $me = $("#my_nick"), $typing = $("#typing");
+  var $out = $("#chat_out"), $in = $("#chat_in"), $typing = $("#typing");
   var emote_re = /^\/me /;
   var list_re = /^\/list$/;
+  var nick_re = /^\/nick (\S.*)$/;
   var last_type = 0;
   function typingCheck(isTyping) {
     var now = Date.now();
@@ -35,7 +37,7 @@
     $in.scrollTop($in.prop('scrollHeight'));
   }
   socket.on('connect', function () {
-    $me.val(this.socket.sessionid);
+    console.log('connected');
   });
   socket.on('news', function (data) {
     $in.append($("<pre>", { text: "news: " + JSON.stringify(data) }));
@@ -62,6 +64,9 @@
       msg.emote = input.replace(emote_re, '');
     } else if (list_re.test(input)) {
       msg.cmd = '/list';
+    } else if (nick_re.test(input)) {
+      msg.cmd = '/nick';
+      msg.args = nick_re.exec(input)[1];
     } else {
       msg.message = input;
     }
@@ -69,16 +74,4 @@
     $(this).val('');
     typingCheck(false);
   });
-  $me.on('return_pressed', function () {
-    var nick = $(this).val().replace(/^\s+/, '').replace(/\s+$/, '');
-    socket.emit("nick", nick, function (success) {
-      if (success) {
-        $me.val(nick);
-        $me.prop('disabled', true);
-      } else {
-        $me.val("sorry, taken, try again");
-      }
-    });
-  });
-
 }) ();
