@@ -16,6 +16,11 @@ a {
   clear: both;
 }
 
+#typing {
+  color: #ddd;
+  font-style: italic;
+}
+
 .avatar {
     float: left;
     margin-right: 3px;

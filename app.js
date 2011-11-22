@@ -82,6 +82,16 @@ io.sockets.on('connection', function (socket) {
       sys_announce(old + " is now known as " + nick);
     }
   });
+  socket.on('typing', function (isTyping) {
+    var who = [];
+    users[socket.nickname].typing = isTyping;
+    for (user in users) {
+      if (users[user].typing) {
+        who.push(user);
+      }
+    }
+    socket.emit('typing', who);
+  });
   socket.on('msg', function (message) {
     message.from = socket.nickname;
     if (message.message) {
