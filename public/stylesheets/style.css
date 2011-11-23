@@ -7,13 +7,22 @@ a {
   color: #00B7FF;
 }
 
+#wrapper {
+  width: 480px;
+  height: 600px;
+}
+
 #chat_in {
   font-size: 0.75em;
   border: 1px solid black;
-  width: 500px;
-  height: 300px;
+  width: 100%;
+  min-height: 300px;
   overflow-y: scroll;
   clear: both;
+}
+
+#chat_out {
+  width: 100%;
 }
 
 #typing {
