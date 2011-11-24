@@ -1,5 +1,5 @@
 // vim: ts=2 sw=2 expandtab
-(function () {
+$(function () {
   var console = window.console || { log : function () {} };
   window['spacechat'] = window['sapcechat'] || io.connect();
   var socket = window.spacechat;
@@ -74,4 +74,4 @@
     $(this).val('');
     typingCheck(false);
   });
-}) ();
+});
