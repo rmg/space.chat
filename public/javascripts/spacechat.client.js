@@ -5,8 +5,8 @@ $(function () {
   var socket = window.spacechat;
   var $out = $("#chat_out"), $in = $("#chat_in"), $typing = $("#typing");
   var emote_re = /^\/me /;
-  var list_re = /^\/list$/;
-  var nick_re = /^\/nick (\S.*)$/;
+  var cmd_re = /^(\/\S+)\s*$/;
+  var cmd_with_args_re = /^(\/\S+)\s+(\S.*)$/;
   var last_type = 0;
   function typingCheck(isTyping) {
     var now = Date.now();
@@ -59,14 +59,15 @@ $(function () {
     }
   });
   $out.on('return_pressed', function () {
-    var input = $(this).val(), msg = {};
+    var input = $(this).val(), msg = {}, split;
     if (emote_re.test(input)) {
       msg.emote = input.replace(emote_re, '');
-    } else if (list_re.test(input)) {
-      msg.cmd = '/list';
-    } else if (nick_re.test(input)) {
-      msg.cmd = '/nick';
-      msg.args = nick_re.exec(input)[1];
+    } else if (cmd_re.test(input)) {
+      msg.cmd = cmd_re.exec(input)[1];
+    } else if (cmd_with_args_re.test(input)) {
+      split = cmd_with_args_re.exec(input);
+      msg.cmd = split[1];
+      msg.args = split[2];
     } else {
       msg.message = input;
     }
