@@ -38,6 +38,12 @@ app.get('/', routes.index);
 
 var users = {};
 
+var help = {
+  "nick": "'/nick <new name>' to set a new nick. If you use an email address for the nick above, it will do a gravatar lookup for your avatar, but only display the username portion of your address as your handle",
+  "list": "'/list' to list current users",
+  "help": "'/help' display this help message",
+};
+
 // TODO: refactor this all into a CommonJS module and just
 //       instantiate it on each new connection or something
 io.sockets.on('connection', function (socket) {
@@ -60,13 +66,26 @@ io.sockets.on('connection', function (socket) {
       sys_announce(old + " is now known as " + nick);
     }
   }
+  function handle_help(args) {
+    var usage = [];
+    for (cmd in help) {
+        usage.push(help[cmd]);
+    }
+    if (args) {
+      socket.emit('msg', {from: 'SYS', message: (help.hasOwnProperty(args) ? help[args] : "No help available for '" + args + "'") });
+    } else {
+      socket.emit('msg', {from: 'SYS', message: markdown(usage.join('\n\n'))});
+    }
+  }
   function handle_command (cmd, args) {
     if (cmd == '/list') {
       socket.emit('msg', {from: 'SYS', message: "Current users: " + Object.keys(users).join(', ')});
     } else if (cmd == '/nick') {
       handle_nick(args);
+    } else if (cmd == '/help') {
+      handle_help(args);
     } else {
-      socket.emit('msg', {from: 'SYS', message: "Unknown command: " + cmd})
+      socket.emit('msg', {from: 'SYS', message: "Unknown command: '" + cmd + "'. Try asking for help with '/help'"});
     }
   }
   socket.nickname = socket.id;
