@@ -47,6 +47,10 @@ var help = {
 // TODO: refactor this all into a CommonJS module and just
 //       instantiate it on each new connection or something
 io.sockets.on('connection', function (socket) {
+  function emit_all(varargs) {
+    socket.emit.apply(socket, arguments);
+    socket.emit.apply(socket.broadcast, arguments);
+  }
   function sys_announce(msg) {
     announce({ from: 'SYS', message: msg});
   }
@@ -111,7 +115,7 @@ io.sockets.on('connection', function (socket) {
         who.push(user);
       }
     }
-    socket.emit('typing', who).broadcast.emit('typing', who);
+    emit_all('typing', who);
   });
   socket.on('msg', function (message) {
     message.from = socket.nickname;
