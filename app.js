@@ -55,7 +55,10 @@ io.sockets.on('connection', function (socket) {
     announce({ from: 'SYS', message: msg});
   }
   function announce(announcement) {
-    socket.emit('msg', announcement).broadcast.emit('msg', announcement);
+    emit_all('msg', announcement);
+  }
+  function members_list() {
+    return Object.keys(users).sort();
   }
   function handle_nick(nick) {
     var old;
@@ -68,6 +71,7 @@ io.sockets.on('connection', function (socket) {
       delete users[old];
       users[nick] = socket;
       sys_announce(old + " is now known as " + nick);
+      emit_all('members', members_list());
     }
   }
   function handle_help(args) {
@@ -102,10 +106,13 @@ io.sockets.on('connection', function (socket) {
     socket.nickname + " has joined the chat. " +
       "Current users are: " + Object.keys(users).join(', ')
   );
+  emit_all('members', members_list());
 
   socket.on('disconnect', function () {
-    socket.broadcast.emit('msg', {from: 'SYS', message: socket.nickname + ' has left.'});
     delete users[socket.nickname];
+    socket.broadcast.
+      emit('msg', {from: 'SYS', message: socket.nickname + ' has left.'}).
+      emit('members', members_list());
   });
   socket.on('typing', function (isTyping) {
     var who = [];
