@@ -1,6 +1,12 @@
 // vim: ts=2 sw=2 expandtab
 $(function () {
   var console = window.console || { log : function () {} };
+  function avatar(nick, size) {
+    return "<img class='avatar' src='http://gravatar.com/avatar/" + Crypto.MD5(nick) + "?s=" + (size || 16) + "&d=retro' />";
+  }
+  function name(nick) {
+    return nick.split('@')[0];
+  }
   io.connect().on('connect', function () {
     var socket = this;
     var $out = $("#chat_out"), $in = $("#chat_in"), $typing = $("#typing");
@@ -8,7 +14,6 @@ $(function () {
     var cmd_re = /^(\/\S+)\s*$/;
     var cmd_with_args_re = /^(\/\S+)\s+(\S.*)$/;
     var last_type = 0;
-    console.log('connected');
     function typingCheck(isTyping) {
       var now = Date.now();
       if (isTyping === true) {
@@ -29,14 +34,14 @@ $(function () {
       }
     }
     function show_message(data) {
-      var avatar = "<img class='avatar' src='http://gravatar.com/avatar/" + Crypto.MD5(data.from) + "?s=16&d=retro' />";
-      var who = data.from.split('@')[0];
+      var who = name(data.from);
       var message = ( data.emote ?
         "<span class='emote'>" + who + " " + data.emote + "</span>" :
         "<span class='nick'>" + who + ":</span>" + "<span class='message'>" + data.message + "</span>");
-      $typing.before("<div class='line'>" + avatar + message + "</div>");
+      $typing.before("<div class='line'>" + avatar(data.from) + message + "</div>");
       $in.scrollTop($in.prop('scrollHeight'));
     }
+    console.log('connected');
     socket.on('news', function (data) {
       $in.append($("<pre>", { text: "news: " + JSON.stringify(data) }));
       socket.emit('my other event', { my: 'data' });
