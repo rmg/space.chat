@@ -55,6 +55,12 @@ $(function () {
         $typing.html(' &nbsp; ');
       }
     });
+    socket.on('members', function (members) {
+      var list = $.map(members, function (nick) {
+        return "<li>" + avatar(nick) + name(nick) + "</li>";
+      });
+      $("#members").find("ul").html(list.join("\n"));
+    });
     $("input").on('keypress', function (e) {
       typingCheck(true);
       if (e.keyCode == 13) {

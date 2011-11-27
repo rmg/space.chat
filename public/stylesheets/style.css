@@ -17,6 +17,21 @@
     right: 0;
     border: 0;
   }
+  #members {
+    display: inline-block;
+    position: relative;
+    float: right;
+    height: 100%;
+    width: 15%;
+    margin: 0;
+    padding: 0;
+    /*border: 1px solid black;*/
+  }
+  #chat_in, #chat_out {
+    margin: 0;
+    display: inline-block;
+    width: 84%;
+  }
 }
 /* iOS/Android */
 @media only screen and (max-device-width: 480px) {
@@ -32,12 +47,15 @@
     width: 100%;
     height: 100%;
   }
-  #github {
+  #github, #members {
     display: none;
   }
   h2 {
     margin: 0;
     padding: 0;
+  }
+  #chat_in, #chat_out {
+    width: 99%;
   }
 }
 
@@ -45,11 +63,27 @@ a {
   color: #00B7FF;
 }
 
+#members ul {
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 60%;
+  margin: 0;
+}
+
+#members ul li {
+  margin-bottom: 1px;
+  white-space: nowrap;
+}
+
+#members ul li .avatar {
+  vertical-align: middle;
+  margin-right: 1px;
+}
+
 #chat_in {
   font-size: 80%;
   border: 1px solid black;
-  width: 99%;
-  height: 80%;
+  height: 95%;
   overflow-y: scroll;
   clear: both;
 }
@@ -57,7 +91,6 @@ a {
 #chat_out {
   margin: 0;
   padding: 0;
-  width: 99%;
 }
 
 #typing {
@@ -65,7 +98,7 @@ a {
   font-style: italic;
 }
 
-.avatar {
+.line .avatar {
   float: left;
   margin-right: 3px;
   margin-bottom: 3px;
